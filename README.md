@@ -5,6 +5,9 @@
 - **lineCounter.ignore** : contain all the folders and files to ignore ( either folderPath or *.file extension ) 
 
 ### Example lineCounter.ignore :
-EngineVS                					 folder <br />
-*.svg                   					 file type <br />
-client\normalize.css    					 file 
+-folder :
+ EngineVS
+-file type :
+ *.svg                   					 
+-file :
+ client\normalize.css    					
