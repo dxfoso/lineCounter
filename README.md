@@ -7,7 +7,7 @@
 ### Example lineCounter.ignore :
 -folder : <br />
  EngineVS <br />
--file type : <br />
- *.svg        <br />            					 
+-file type :<br />
+ *.svg<br />            					 
 -file : <br />
  client\normalize.css    					
