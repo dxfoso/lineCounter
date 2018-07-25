@@ -1,5 +1,4 @@
-/Debug
-/x64
-/LinesCounter/Debug
-/LinesCounter/x64
-/.vs
+/VS/.vs
+/VS/Debug
+/VS/x64
+/VS/lineCounter.svg
