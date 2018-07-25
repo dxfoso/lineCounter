@@ -10,4 +10,5 @@
 -file type :<br />
  *.svg<br />            					 
 -file : <br />
+
  client\normalize.css    					
