@@ -10,7 +10,7 @@
 #include <vector>
 #include <iomanip>
 #include <map> 
-
+int BadgeID = 0;
 std::map<std::string, int > result;
 
 
@@ -57,7 +57,7 @@ int   LineCountFile(fs::path FilePath, std::vector<fs::path>& Ignore) {
 	int count = std::count(std::istreambuf_iterator<char>(inFile),
 		std::istreambuf_iterator<char>(), '\n');
 
-	std::string  ext = FilePath.extension().string();
+	std::string  ext = FilePath.extension().string().erase(0, 1);
 	if (result.count(ext) == 0)
 		result.insert(std::make_pair(ext, 0));
 	result[ext] += count;
@@ -143,7 +143,7 @@ std::vector<fs::path> GetIgnorePaths(fs::path Parent) {
 	}
 	return res;
 }
-void createBadge(std::string color1, std::string color2, std::string value1, std::string value2, float width1, float width2, float height, std::ofstream& out) {
+void createBadge(float x, float y, std::string color1, std::string color2, std::string value1, std::string value2, float width1, float width2, float height, std::ofstream& out) {
 	int totalWidth = width1 + width2;
 
 
@@ -151,11 +151,23 @@ void createBadge(std::string color1, std::string color2, std::string value1, std
 	out << totalWidth;
 	out << "' height='";
 	out << height;
-	out << "'><linearGradient id='b' x2='0' y2='100%'><stop offset='0' stop-color='#bbb' stop-opacity='.1'/><stop offset='1' stop-opacity='.1'/></linearGradient><clipPath id='a'><rect width='";
+	out << "' ";
+	out << "x='";
+	out << x;
+	out << "' ";
+	out << "y='";
+	out << y;
+	out << "' ";
+	out << "><linearGradient id='b' x2='0' y2='100%'><stop offset='0' stop-color='#bbb' stop-opacity='.1'/><stop offset='1' stop-opacity='.1'/></linearGradient><clipPath id='a";
+	out << BadgeID;
+	out << "'><rect width='";
 	out << totalWidth;
 	out << "' height='";
 	out << height;
-	out << "' rx='3' fill='#fff'/></clipPath><g clip-path='url(#a)'><path fill='";
+	out << "'";
+	out << " rx='3' fill='#fff'/></clipPath><g clip-path='url(#a";
+	out << BadgeID;
+	out << ")'><path fill='";
 	out << color1;
 	out << "' d='M0 0h";
 	out << width1;
@@ -178,24 +190,26 @@ void createBadge(std::string color1, std::string color2, std::string value1, std
 	out << "H0z'/></g><g fill='#fff' text-anchor='middle' font-family='DejaVu Sans,Verdana,Geneva,sans-serif' font-size='11'><text x='";
 	out << width1 / 2;
 	out << "' y='";
-	out << height / 2 + 5;
+	out << height / 2 + 4;
 	out << "' fill='#010101' fill-opacity='.3'></text><text x='";
 	out << width1 / 2;
-	out << "' y='"; 
-	out << height / 2 + 5;
+	out << "' y='";
+	out << height / 2 + 4;
 	out << "'>";
 	out << value1;
 	out << "</text><text x='";
 	out << width1 + width2 / 2;
 	out << "' y='";
-	out << height / 2 + 5;
+	out << height / 2 + 4;
 	out << "' fill='#010101' fill-opacity='.3'></text><text x='";
 	out << width1 + width2 / 2;
 	out << "' y='";
-	out << height / 2 + 5;
+	out << height / 2 + 4;
 	out << "'>";
 	out << value2;
 	out << "</text></g></svg>";
+
+	BadgeID++;
 }
 int main()
 {
@@ -207,8 +221,20 @@ int main()
 
 	int res = LineCount(Path, Ignore);
 	std::ofstream out("lineCounter.svg");
+	out << "<svg xmlns = 'http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>";
 
-	createBadge("#5b5b5b", "#9E9E9E", "Count", std::to_string(res), 30.5, 100, 50, out);
+
+
+	createBadge(0, 0, "#5b5b5b", "#9E9E9E", "Line Code Total", std::to_string(res), 100, 80, 20, out);
+	int x = 180;
+	for (auto const &v : result) {
+		int w1 = 40, w2 = 50;
+		createBadge(x, 0, "#5b5b5b", "#9E9E9E", v.first, std::to_string(v.second), w1, w2, 20, out);
+
+		x += w1 + w2 + 1;
+	}
+
+	out << "</svg>";
 
 	out.close();
 
