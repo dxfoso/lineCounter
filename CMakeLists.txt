@@ -6,9 +6,7 @@ cmake_minimum_required(VERSION 2.8)
 
 project(lineCounter)
 # Set the output folder where your program will be created
-set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/bin)
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
-set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+set(CMAKE_CURRENT_BINARY_DIR ${CMAKE_SOURCE_DIR})
 
-# The following folder will be included
-include_directories("${PROJECT_SOURCE_DIR}")
+add_subdirectory(src)
+add_executable(lineCounter ${PROJECT_SOURCE_DIR}/lineCounter.cpp)
