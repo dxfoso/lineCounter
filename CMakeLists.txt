@@ -1,12 +1,12 @@
 # Specify the minimum version for CMake
-
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.5)
 
 # Project's name
-
 project(lineCounter)
+set (CMAKE_CXX_STANDARD 14)
 # Set the output folder where your program will be created
-set(CMAKE_CURRENT_BINARY_DIR ${CMAKE_SOURCE_DIR})
+set(CMAKE_CURRENT_BINARY_DIR ${CMAKE_HOME_DIRECTORY}/linux)
 
 add_subdirectory(src)
-add_executable(lineCounter ${PROJECT_SOURCE_DIR}/lineCounter.cpp)
+
+
