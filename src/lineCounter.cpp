@@ -9,7 +9,9 @@
 #include <fstream>
 #include <vector>
 #include <iomanip>
+#include <map> 
 
+std::map<std::string, int > result;
 
 
 #if defined(_WIN32)
@@ -38,7 +40,7 @@ std::string GetCurrentWorkingDir(void) {
 	return current_working_dir;
 }
 /////////////////GetCurrentWorkingDir///////////////////////////////////////////////
-int LineCountFile(fs::path FilePath, std::vector<fs::path>& Ignore) {
+int   LineCountFile(fs::path FilePath, std::vector<fs::path>& Ignore) {
 	if (fs2::is_directory(FilePath))return 0;
 
 
@@ -55,10 +57,15 @@ int LineCountFile(fs::path FilePath, std::vector<fs::path>& Ignore) {
 	int count = std::count(std::istreambuf_iterator<char>(inFile),
 		std::istreambuf_iterator<char>(), '\n');
 
+	std::string  ext = FilePath.extension().string();
+	if (result.count(ext) == 0)
+		result.insert(std::make_pair(ext, 0));
+	result[ext] += count;
+
+	//only for command line 
 	std::string c = std::to_string(count);
-
-
 	std::cout << " " << c << std::setw(10 - c.length()) << " : " << FilePath << std::endl;
+	//only for command line
 	return count;
 }
 int LineCount(fs::path Path, std::vector<fs::path>& Ignore) {
@@ -70,7 +77,7 @@ int LineCount(fs::path Path, std::vector<fs::path>& Ignore) {
 			return 0;
 	}
 
-	if (!fs2::is_directory(Path))return LineCountFile(Path, Ignore);
+	if (!fs2::is_directory(Path)) return LineCountFile(Path, Ignore);
 	int res = 0;
 	for (auto & p : fs::directory_iterator(Path)) {
 		if (!fs2::is_directory(p.path().string()))
@@ -136,7 +143,60 @@ std::vector<fs::path> GetIgnorePaths(fs::path Parent) {
 	}
 	return res;
 }
+void createBadge(std::string color1, std::string color2, std::string value1, std::string value2, float width1, float width2, float height, std::ofstream& out) {
+	int totalWidth = width1 + width2;
 
+
+	out << "<svg xmlns = 'http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='";
+	out << totalWidth;
+	out << "' height='";
+	out << height;
+	out << "'><linearGradient id='b' x2='0' y2='100%'><stop offset='0' stop-color='#bbb' stop-opacity='.1'/><stop offset='1' stop-opacity='.1'/></linearGradient><clipPath id='a'><rect width='";
+	out << totalWidth;
+	out << "' height='";
+	out << height;
+	out << "' rx='3' fill='#fff'/></clipPath><g clip-path='url(#a)'><path fill='";
+	out << color1;
+	out << "' d='M0 0h";
+	out << width1;
+	out << "v";
+	out << height;
+	out << "H0z'/><path fill= '";
+	out << color2;
+	out << "' d='M";
+	out << width1;
+	out << " 0h";
+	out << width2;
+	out << "v";
+	out << height;
+	out << "H";
+	out << width1;
+	out << "z'/><path fill='url(#b)' d='M0 0h";
+	out << totalWidth;
+	out << "v";
+	out << height;
+	out << "H0z'/></g><g fill='#fff' text-anchor='middle' font-family='DejaVu Sans,Verdana,Geneva,sans-serif' font-size='11'><text x='";
+	out << width1 / 2;
+	out << "' y='";
+	out << height / 2 + 5;
+	out << "' fill='#010101' fill-opacity='.3'></text><text x='";
+	out << width1 / 2;
+	out << "' y='"; 
+	out << height / 2 + 5;
+	out << "'>";
+	out << value1;
+	out << "</text><text x='";
+	out << width1 + width2 / 2;
+	out << "' y='";
+	out << height / 2 + 5;
+	out << "' fill='#010101' fill-opacity='.3'></text><text x='";
+	out << width1 + width2 / 2;
+	out << "' y='";
+	out << height / 2 + 5;
+	out << "'>";
+	out << value2;
+	out << "</text></g></svg>";
+}
 int main()
 {
 	//get path from settings 
@@ -148,19 +208,8 @@ int main()
 	int res = LineCount(Path, Ignore);
 	std::ofstream out("lineCounter.svg");
 
-	out << "<svg xmlns = 'http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='156' height='20'><linearGradient id='b' x2='0' y2='100%'><stop offset='0' stop-color='#bbb' stop-opacity='.1'/><stop offset='1' stop-opacity='.1'/></linearGradient><clipPath id='a'><rect width='156' height='20' rx='3' fill='#fff'/></clipPath><g clip-path='url(#a)'><path fill='";
-	out << "#5b5b5b";
-	out << "' d='M0 0h85v20H0z'/><path fill= '";
-	out << "#9E9E9E";
-	out << "' d='M85 0h71v20H85z'/><path fill='url(#b)' d='M0 0h156v20H0z'/></g><g fill='#fff' text-anchor='middle' font-family='DejaVu Sans,Verdana,Geneva,sans-serif' font-size='11'><text x='42.5' y='15' fill='#010101' fill-opacity='.3'>";
-	out << "Lines Count";
-	out << "</text><text x='42.5' y='14'>";
-	out << "Lines Count :";
-	out << "</text><text x='119.5' y='15' fill='#010101' fill-opacity='.3'>";
-	out << res;
-	out << "</text><text x='119.5' y='14'>";
-	out << res;
-	out << "</text></g></svg>";
+	createBadge("#5b5b5b", "#9E9E9E", "Count", std::to_string(res), 30.5, 100, 50, out);
+
 	out.close();
 
 	std::cout << "***" << res << "***" << std::endl;
