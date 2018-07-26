@@ -1,7 +1,5 @@
-// LinesCounter.cpp : Defines the entry point for the console application.
+﻿// LinesCounter.cpp : Defines the entry point for the console application.
 //
-
-
 #include <string>
 #include <iostream>
 #include <experimental/filesystem> 
@@ -11,6 +9,8 @@
 #include <fstream>
 #include <vector>
 #include <iomanip>
+
+
 
 #if defined(_WIN32)
 namespace fs = std::experimental::filesystem::v1;
@@ -78,7 +78,7 @@ int LineCount(fs::path Path, std::vector<fs::path>& Ignore) {
 		else
 			res += LineCount(p, Ignore);
 	}
-	std::cout << res << " ------f  " << Path << std::endl << std::endl;
+	std::cout << res << " ------folder " << Path << std::endl << std::endl;
 	return res;
 }
 bool getFileContent(std::string fileName, std::vector<fs::path> & vecOfStrs, int lineCount = -1)
@@ -90,7 +90,7 @@ bool getFileContent(std::string fileName, std::vector<fs::path> & vecOfStrs, int
 	// Check if object is valid
 	if (!in)
 	{
-		std::cerr << "Cannot open the File : " << fileName << std::endl;
+		std::cerr << "no lineCounter.ignore file provided at " << fileName << "continue without ignore file" << std::endl;
 		return false;
 	}
 
@@ -121,21 +121,17 @@ std::vector<fs::path> GetIgnorePaths(fs::path Parent) {
 
 	std::vector<fs::path> temp;
 	std::vector<fs::path> res;
-	getFileContent(Parent.string() + "lineCounter.ignore", temp);
+
+	fs::path ignore(Parent);
+	ignore.append("lineCounter.ignore");
+	getFileContent(ignore.string(), temp);
 
 	//combine with the parent path 
 	for (fs::path const& value : temp) {
 		fs::path t;
-		if (value.string()[0] != '*') {
-
-#if defined(_WIN32)
-			t = Parent.string() +"\\"+ value.string();
-#elif defined(__linux__)
-			t = Parent.string() +"/"+  value.string();
-#endif
-		}
-		else
-			t = value;
+		if (value.string()[0] != '*')
+			t.append(Parent.string());
+		t.append(value.string());
 		res.push_back(t);
 	}
 	return res;
@@ -152,11 +148,11 @@ int main()
 	int res = LineCount(Path, Ignore);
 	std::ofstream out("lineCounter.svg");
 
-	out << "<svg xmlns = 'http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='156' height='20'><linearGradient id='b' x2='0' y2='100%'><stop offset='0' stop-color='#bbb' stop-opacity='.1'/><stop offset='1' stop-opacity='.1'/></linearGradient><clipPath id='a'><rect width='156' height='20' rx='3' fill='#fff'/></clipPath><g clip-path='url\(#a\)'><path fill='";
+	out << "<svg xmlns = 'http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='156' height='20'><linearGradient id='b' x2='0' y2='100%'><stop offset='0' stop-color='#bbb' stop-opacity='.1'/><stop offset='1' stop-opacity='.1'/></linearGradient><clipPath id='a'><rect width='156' height='20' rx='3' fill='#fff'/></clipPath><g clip-path='url(#a)'><path fill='";
 	out << "#5b5b5b";
 	out << "' d='M0 0h85v20H0z'/><path fill= '";
 	out << "#9E9E9E";
-	out << "' d='M85 0h71v20H85z'/><path fill='url\(#b\)' d='M0 0h156v20H0z'/></g><g fill='#fff' text-anchor='middle' font-family='DejaVu Sans\,Verdana\,Geneva\,sans-serif' font-size='11'><text x='42.5' y='15' fill='#010101' fill-opacity='.3'>";
+	out << "' d='M85 0h71v20H85z'/><path fill='url(#b)' d='M0 0h156v20H0z'/></g><g fill='#fff' text-anchor='middle' font-family='DejaVu Sans,Verdana,Geneva,sans-serif' font-size='11'><text x='42.5' y='15' fill='#010101' fill-opacity='.3'>";
 	out << "Lines Count";
 	out << "</text><text x='42.5' y='14'>";
 	out << "Lines Count :";
@@ -166,5 +162,8 @@ int main()
 	out << res;
 	out << "</text></g></svg>";
 	out.close();
+
+	std::cout << "***" << res << "***" << std::endl;
+
 	return 0;
 }
