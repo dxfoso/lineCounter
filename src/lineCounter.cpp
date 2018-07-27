@@ -238,7 +238,7 @@ int main()
 
 	out.close();
 
-	std::cout << "***" << res << "***" << std::endl;
+	std::cout << "***" << res << "***  line of Code " << (res < 100 ? ":(" : ":)") << std::endl;
 
 	return 0;
 }
