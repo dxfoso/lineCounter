@@ -24,7 +24,8 @@ std::map<std::string, std::string> colors = {
 { "html", "#e34c26" },
 { "js", "#f1e05a" },
 { "gitignore", "#f50000" },
-{ "ignore", "#f50000" }
+{ "ignore", "#f50000" },
+{ "md", "#02f88c" }
 };
 
 
