@@ -17,12 +17,14 @@ std::map<std::string, std::string> colors = {
 { "c" , "#555555"} ,
 { "cs" , "#178600" } ,
 { "cpp" , "#f34b7d" } ,
-{ "CMakeLists.txt", "cccccc" },
-{ "css", "563d7c" },
-{ "Dockerfile", "0db7ed" },
-{ "yml", "0db7ed" },
-{ "html", "e34c26" },
-{ "js", "f1e05a" }
+{ "CMakeLists", "#cccccc" },
+{ "css", "#563d7c" },
+{ "Dockerfile", "#0db7ed" },
+{ "yml", "#0db7ed" },
+{ "html", "#e34c26" },
+{ "js", "#f1e05a" },
+{ "gitignore", "#f50000" },
+{ "ignore", "#f50000" }
 };
 
 
@@ -57,7 +59,7 @@ void addValue(fs::path FilePath, int count) {
 
 
 	if (FilePath.filename().string() == "CMakeLists.txt")
-		key = "CMakeLists.txt";
+		key = "CMakeLists";
 	else if (FilePath.filename().string() == "Dockerfile")
 		key = "Dockerfile";
 	else key = FilePath.extension().string().erase(0, 1);
@@ -264,10 +266,12 @@ int main()
 	int x = 180;
 	int y = 0;
 	int space = 2;
-	createBadge(0, y, "#5b5b5b", "#9E9E9E", "Line Code Total", std::to_string(res), 100, 80, height, out);
+	createBadge(0, y, "#5b5b5b", "#9E9E9E", "Total code lines", std::to_string(res), 100, 80, height, out);
 
 	for (auto const &v : result) {
-		int w1 = 40, w2 = 50;
+		int w1 = v.first.length() * 7 + 20, w2 = 50;
+
+
 		x += space;
 		if (x + w1 + w2 + space > 1000) { x = 0; y += height + space; }
 		createBadge(x, y, "#5b5b5b", getColor(v.first), v.first, std::to_string(v.second), w1, w2, height, out);
