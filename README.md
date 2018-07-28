@@ -1,5 +1,5 @@
 # Line Counter 
-<img src="https://raw.githubusercontent.com/kernelapp/lineCounterBadges/master/lineCounter.svg?sanitize=true"  width="1000" height="35"   />
+<img src="https://raw.githubusercontent.com/kernelapp/lineCounterBadges/master/lineCounter.svg?sanitize=true"  width="890" height="35"   />
 
 
 

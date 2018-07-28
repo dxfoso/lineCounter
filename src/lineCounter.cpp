@@ -267,6 +267,7 @@ int main()
 	int x = 180;
 	int y = 0;
 	int space = 2;
+	int maxWidth = 890;
 	createBadge(0, y, "#5b5b5b", "#9E9E9E", "Total code lines", std::to_string(res), 100, 80, height, out);
 
 	for (auto const &v : result) {
@@ -274,7 +275,7 @@ int main()
 
 
 		x += space;
-		if (x + w1 + w2 + space > 1000) { x = 0; y += height + space; }
+		if (x + w1 + w2 + space > maxWidth) { x = 0; y += height + space; }
 		createBadge(x, y, "#5b5b5b", getColor(v.first), v.first, std::to_string(v.second), w1, w2, height, out);
 		x += w1 + w2;
 	}
