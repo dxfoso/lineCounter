@@ -13,6 +13,18 @@
 int BadgeID = 0;
 std::map<std::string, int > result;
 
+std::map<std::string, std::string> colors = {
+{ "c" , "#555555"} ,
+{ "cs" , "#178600" } ,
+{ "cpp" , "#f34b7d" } ,
+{ "CMakeLists.txt", "cccccc" },
+{ "css", "563d7c" },
+{ "Dockerfile", "0db7ed" },
+{ "yml", "0db7ed" },
+{ "html", "e34c26" },
+{ "js", "f1e05a" }
+};
+
 
 #if defined(_WIN32)
 namespace fs = std::experimental::filesystem::v1;
@@ -39,8 +51,25 @@ std::string GetCurrentWorkingDir(void) {
 	std::string current_working_dir(buff);
 	return current_working_dir;
 }
+
+void addValue(fs::path FilePath, int count) {
+	std::string key;
+
+
+	if (FilePath.filename().string() == "CMakeLists.txt")
+		key = "CMakeLists.txt";
+	else if (FilePath.filename().string() == "Dockerfile")
+		key = "Dockerfile";
+	else key = FilePath.extension().string().erase(0, 1);
+
+
+
+	if (result.count(key) == 0)
+		result.insert(std::make_pair(key, 0));
+	result[key] += count;
+}
 /////////////////GetCurrentWorkingDir///////////////////////////////////////////////
-int   LineCountFile(fs::path FilePath, std::vector<fs::path>& Ignore) {
+int LineCountFile(fs::path FilePath, std::vector<fs::path>& Ignore) {
 	if (fs2::is_directory(FilePath))return 0;
 
 
@@ -57,10 +86,7 @@ int   LineCountFile(fs::path FilePath, std::vector<fs::path>& Ignore) {
 	int count = std::count(std::istreambuf_iterator<char>(inFile),
 		std::istreambuf_iterator<char>(), '\n');
 
-	std::string  ext = FilePath.extension().string().erase(0, 1);
-	if (result.count(ext) == 0)
-		result.insert(std::make_pair(ext, 0));
-	result[ext] += count;
+	addValue(FilePath, count);
 
 	//only for command line 
 	std::string c = std::to_string(count);
@@ -211,12 +237,22 @@ void createBadge(float x, float y, std::string color1, std::string color2, std::
 
 	BadgeID++;
 }
+
+std::string getColor(std::string FileKey) {
+	if (colors.count(FileKey) == 0)
+		return  "#9E9E9E";
+	else return colors[FileKey];
+}
 int main()
 {
 	//get path from settings 
 	std::vector<fs::path> temp;
-	fs::path Path(GetCurrentWorkingDir()); // empty path
+	//debug ----------------
+	//fs::path Path("D:\\lineCounter"); // empty path
+	//std::vector<fs::path> Ignore; 
 
+	//release  only ---------------------
+	fs::path Path(GetCurrentWorkingDir()); // empty path
 	std::vector<fs::path> Ignore = GetIgnorePaths(Path);
 
 	int res = LineCount(Path, Ignore);
@@ -224,14 +260,18 @@ int main()
 	out << "<svg xmlns = 'http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>";
 
 
-
-	createBadge(0, 0, "#5b5b5b", "#9E9E9E", "Line Code Total", std::to_string(res), 100, 80, 20, out);
+	int height = 20;
 	int x = 180;
+	int y = 0;
+	int space = 2;
+	createBadge(0, y, "#5b5b5b", "#9E9E9E", "Line Code Total", std::to_string(res), 100, 80, height, out);
+
 	for (auto const &v : result) {
 		int w1 = 40, w2 = 50;
-		createBadge(x, 0, "#5b5b5b", "#9E9E9E", v.first, std::to_string(v.second), w1, w2, 20, out);
-
-		x += w1 + w2 + 1;
+		x += space;
+		if (x + w1 + w2 + space > 1000) { x = 0; y += height + space; }
+		createBadge(x, y, "#5b5b5b", getColor(v.first), v.first, std::to_string(v.second), w1, w2, height, out);
+		x += w1 + w2;
 	}
 
 	out << "</svg>";
