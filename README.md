@@ -1,6 +1,6 @@
 # Line Counter 
 
-<img src="https://raw.githubusercontent.com/kernelapp/lineCounterBadges/master/lineCounter.svg?sanitize=true"  width="1000" height="35"   />
+<img src="https://raw.githubusercontent.com/kernelapp/lineCounterBadges/master/lineCounter.svg"  width="1000" height="35"   />
 
 
 ## this software will count the number of lines in the specific folder and generate lineCounter.svg file  <br />

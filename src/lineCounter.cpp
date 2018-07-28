@@ -215,8 +215,7 @@ int main()
 {
 	//get path from settings 
 	std::vector<fs::path> temp;
-	//fs::path Path(GetCurrentWorkingDir()); // empty path
-	fs::path Path("D:\\lineCounter"); // empty path
+	fs::path Path(GetCurrentWorkingDir()); // empty path
 
 	std::vector<fs::path> Ignore = GetIgnorePaths(Path);
 
