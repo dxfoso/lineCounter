@@ -172,7 +172,7 @@ std::vector<fs::path> GetIgnorePaths(fs::path Parent) {
 	}
 	return res;
 }
-void createBadge(float x, float y, std::string color1, std::string color2, std::string value1, std::string value2, float width1, float width2, float height, std::ofstream& out) {
+void createBadge(float x, float y, std::string color1, std::string color2, std::string value1, std::string value2, float width1, float width2, float height, int fontSize, std::ofstream& out) {
 	int totalWidth = width1 + width2;
 
 
@@ -224,7 +224,9 @@ void createBadge(float x, float y, std::string color1, std::string color2, std::
 	out << width1 / 2;
 	out << "' y='";
 	out << height / 2 + 4;
-	out << "'>";
+	out << "' font-size='";
+	out << fontSize;
+	out << "px'>";
 	out << value1;
 	out << "</text><text x='";
 	out << width1 + width2 / 2;
@@ -234,7 +236,9 @@ void createBadge(float x, float y, std::string color1, std::string color2, std::
 	out << width1 + width2 / 2;
 	out << "' y='";
 	out << height / 2 + 4;
-	out << "'>";
+	out << "' font-size='";
+	out << fontSize;
+	out << "px'>";
 	out << value2;
 	out << "</text></g></svg>";
 
@@ -263,20 +267,21 @@ int main()
 	out << "<svg xmlns = 'http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>";
 
 
-	int height = 20;
-	int x = 180;
+	int height = 30;
+	int mainW1 = 130, mainW2 = 100;
+	int x = mainW1 + mainW2;
 	int y = 0;
 	int space = 2;
 	int maxWidth = 890;
-	createBadge(0, y, "#5b5b5b", "#9E9E9E", "Total code lines", std::to_string(res), 100, 80, height, out);
+	createBadge(0, y, "#5b5b5b", "#9E9E9E", "Total code lines", std::to_string(res), mainW1, mainW2, height,15, out);
 
 	for (auto const &v : result) {
-		int w1 = v.first.length() * 7 + 20, w2 = 50;
+		int w1 = v.first.length() * 7 + 30, w2 = 70;
 
 
 		x += space;
 		if (x + w1 + w2 + space > maxWidth) { x = 0; y += height + space; }
-		createBadge(x, y, "#5b5b5b", getColor(v.first), v.first, std::to_string(v.second), w1, w2, height, out);
+		createBadge(x, y, "#5b5b5b", getColor(v.first), v.first, std::to_string(v.second), w1, w2, height,15, out);
 		x += w1 + w2;
 	}
 
