@@ -26,7 +26,11 @@ std::map<std::string, std::string> colors = {
 { "gitignore", "#f50000" },
 { "ignore", "#f50000" },
 { "md", "#02f88c" },
-{ "jsx", "#d8bf10" }
+{ "jsx", "#d8bf10" },
+{ "sln" , "#865fc5" },
+{ "pyproj" , "#865fc5" },
+{ "py" , "#2372a5" },
+{ "sh" , "#89e051" }
 };
 
 
