@@ -31,7 +31,8 @@ std::map<std::string, std::string> colors = {
 { "sln" , "#865fc5" },
 { "pyproj" , "#865fc5" },
 { "py" , "#2372a5" },
-{ "sh" , "#89e051" }
+{ "sh" , "#89e051" },
+{ "json" , "#d6ae39"},
 };
 
 
@@ -288,12 +289,12 @@ int main()
 
 
 	int height = 30;
-	int mainW1 = 130, mainW2 = 100;
+	int mainW1 = 50, mainW2 = 100;
 	int x = mainW1 + mainW2;
 	int y = 0;
 	int space = 2;
 	int maxWidth = 890;
-	createBadge(0, y, "#5b5b5b", "#9E9E9E", "Total code lines", std::to_string(res), mainW1, mainW2, height,15, out);
+	createBadge(0, y, "#5b5b5b", "#ff69b4", "lines", std::to_string(res), mainW1, mainW2, height,15, out);
 
 
 	resultSorted = flip_map(result);
