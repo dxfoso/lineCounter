@@ -12,6 +12,7 @@
 #include <map> 
 int BadgeID = 0;
 std::map<std::string, int > result;
+std::map<int , std::string > resultSorted;
 
 std::map<std::string, std::string> colors = {
 { "c" , "#555555"} ,
@@ -52,6 +53,20 @@ namespace fs2 = std::experimental::filesystem;
 #define GetCurrentDir getcwd
 #endif
 
+template<typename A, typename B>
+std::pair<B, A> flip_pair(const std::pair<A, B> &p)
+{
+	return std::pair<B, A>(p.second, p.first);
+}
+
+template<typename A, typename B>
+std::map<B, A> flip_map(const std::map<A, B> &src)
+{
+	std::map<B, A> dst;
+	std::transform(src.begin(), src.end(), std::inserter(dst, dst.begin()),
+		flip_pair<A, B>);
+	return dst;
+}
 
 std::string GetCurrentWorkingDir(void) {
 	char buff[FILENAME_MAX];
@@ -280,14 +295,21 @@ int main()
 	int maxWidth = 890;
 	createBadge(0, y, "#5b5b5b", "#9E9E9E", "Total code lines", std::to_string(res), mainW1, mainW2, height,15, out);
 
-	for (auto const &v : result) {
-		int w1 = v.first.length() * 7 + 30, w2 = 70;
 
+	resultSorted = flip_map(result);
+	int count = 0;
+	for (auto const &v : resultSorted) {
+		count++;
+		if (count < resultSorted.size()-3) 
+			continue;
 
+		int w1 = v.second.length() * 7 + 30, w2 = 70;
 		x += space;
 		if (x + w1 + w2 + space > maxWidth) { x = 0; y += height + space; }
-		createBadge(x, y, "#5b5b5b", getColor(v.first), v.first, std::to_string(v.second), w1, w2, height,15, out);
+		createBadge(x, y, "#5b5b5b", getColor(v.second), v.second, std::to_string(v.first), w1, w2, height,15, out);
 		x += w1 + w2;
+	
+		
 	}
 
 	out << "</svg>";
