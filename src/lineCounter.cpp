@@ -300,7 +300,7 @@ int main()
 	int count = 0;
 	for (auto const &v : resultSorted) {
 		count++;
-		if (count < resultSorted.size()-3) 
+		if (count < resultSorted.size()-2) 
 			continue;
 
 		int w1 = v.second.length() * 7 + 30, w2 = 70;
