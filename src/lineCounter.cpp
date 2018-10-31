@@ -288,13 +288,13 @@ int main()
 	out << "<svg xmlns = 'http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>";
 
 
-	int height = 30;
-	int mainW1 = 50, mainW2 = 100;
+	int height = 25;
+	int mainW1 = 40, mainW2 = 100;
 	int x = mainW1 + mainW2;
 	int y = 0;
 	int space = 2;
 	int maxWidth = 890;
-	createBadge(0, y, "#5b5b5b", "#ff69b4", "lines", std::to_string(res), mainW1, mainW2, height,15, out);
+	createBadge(0, y, "#5b5b5b", "#ff69b4", "lines", std::to_string(res), mainW1, mainW2, height,12, out);
 
 
 	resultSorted = flip_map(result);
@@ -307,7 +307,7 @@ int main()
 		int w1 = v.second.length() * 7 + 30, w2 = 70;
 		x += space;
 		if (x + w1 + w2 + space > maxWidth) { x = 0; y += height + space; }
-		createBadge(x, y, "#5b5b5b", getColor(v.second), v.second, std::to_string(v.first), w1, w2, height,15, out);
+		createBadge(x, y, "#5b5b5b", getColor(v.second), v.second, std::to_string(v.first), w1, w2, height,12, out);
 		x += w1 + w2;
 	
 		
